@@ -80,7 +80,22 @@ public class SchoolNumber extends JFrame{
 		JTextField pr = new JTextField("", 10);
 		JTextField no = new JTextField("", 10);
 		JTextField gr = new JTextField("", 10);
+		int id = Integer.parseInt(sn.getText());
+		int grade = Integer.parseInt(gr.getText());
+		int birthday = Integer.parseInt(bi.getText());
 		JButton addbtn = new JButton("添加数据");
+		addbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+        		Student.setID(id);
+        		Student.setName(nam.getText());
+        		Student.setBirthday(birthday);
+        		Student.setGender(ci.getText());
+        		Student.setCity(bi.getText());
+        		Student.setProfession(pr.getText());
+        		Student.setGrade(grade);
+        		Student.setNote(gr.getText());
+			}
+		});	
 		sn = STAddPanel(change, "学号： ");
 		nam = STAddPanel(change, "性别： ");
 		ge = STAddPanel(change, "籍贯： ");
