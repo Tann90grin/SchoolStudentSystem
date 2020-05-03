@@ -3,64 +3,61 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class Student {
-	private int ID;
-	private String name;
-	private String gender;
-	private int birthday;
-	private String city;
-	private String profession;
-	private String grade;
-	private String note;
+	private static int id;
+	private static String name;
+	private static String gender;
+	private static int birthday;
+	private static String city;
+	private static String profession;
+	private static int grade;
+	private static String note;
 	
-	public int getID() {
-		return ID;
+	public static int getID() {
+		return id;
 	}
-	public void setID(int iD) {
-		ID = iD;
+	public static void setID(int sqlid) {
+		id = sqlid;
 	}
-	public String getName() {
+	public static String getName() {
 		return name;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public static void setName(String sqlname) {
+		name = sqlname;
 	}
-	public String getGender() {
+	public static String getGender() {
 		return gender;
 	}
-	public void setGender(String gender) {
-		this.gender = gender;
+	public static void setGender(String sqlgender) {
+		gender = sqlgender;
 	}
-	public int getBirthday() {
+	public static int getBirthday() {
 		return birthday;
 	}
-	public void setBirthday(int birthday) {
-		this.birthday = birthday;
+	public static void setBirthday(int sqlbirthday) {
+		birthday = sqlbirthday;
 	}
-	public String getCity() {
+	public static String getCity() {
 		return city;
 	}
-	public void setCity(String city) {
-		this.city = city;
+	public static void setCity(String sqlcity) {
+		city = sqlcity;
 	}
-	public String getProfession() {
+	public static String getProfession() {
 		return profession;
 	}
-	public void setProfession(String profession) {
-		this.profession = profession;
+	public static void setProfession(String sqlprofession) {
+		profession = sqlprofession;
 	}
-	public String getGrade() {
+	public static int getGrade() {
 		return grade;
 	}
-	public void setGrade(String grade) {
-		this.grade = grade;
+	public static void setGrade(int sqlgrade) {
+		grade = sqlgrade;
 	}
-	public String getNote() {
+	public static String getNote() {
 		return note;
 	}
-	public void setNote(String note) {
-		this.note = note;
-	}
-	public void Save() {
-		
+	public static void setNote(String sqlnote) {
+		note = sqlnote;
 	}
 }
