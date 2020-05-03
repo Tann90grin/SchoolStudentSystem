@@ -74,12 +74,53 @@ public class Utility {
         	while(rs.next()) {
         		Student.setID(rs.getInt("ID"));
         		Student.setName(rs.getString("Name"));
+        		Student.setBirthday(rs.getInt("Birthday"));
         		Student.setGender(rs.getString("Gender"));
         		Student.setCity(rs.getString("City"));
         		Student.setProfession(rs.getString("Profession"));
         		Student.setGrade(rs.getInt("Grade"));
         		Student.setNote(rs.getString("Note"));
              	}
+        	}catch(SQLException e) {
+        		e.printStackTrace();
+        	}
+    }
+    public static void UpdateUser(String a) {
+    	PreparedStatement st = null; 
+    	ResultSet rs = null;
+    	try {
+    		GetConnection();
+        	st = con.prepareStatement("update schoolnumber set ID=?");
+        	st.setString(1, a);
+        	rs = st.executeQuery();
+        	while(rs.next()) {
+        		Student.setID(rs.getInt("ID"));
+        		Student.setName(rs.getString("Name"));
+        		Student.setBirthday(rs.getInt("Birthday"));
+        		Student.setGender(rs.getString("Gender"));
+        		Student.setCity(rs.getString("City"));
+        		Student.setProfession(rs.getString("Profession"));
+        		Student.setGrade(rs.getInt("Grade"));
+        		Student.setNote(rs.getString("Note"));
+             	}
+        	}catch(SQLException e) {
+        		e.printStackTrace();
+        	}
+    }
+    public static void AddUser() {
+    	PreparedStatement st = null; 
+    	try {
+    		GetConnection();
+        	st = con.prepareStatement("insert into schoolnumber values(?,?,?,?,?,?,?,?)");
+        	st.setInt(1, Student.getID());
+        	st.setString(2, Student.getName());
+        	st.setInt(3, Student.getBirthday());
+        	st.setString(4, Student.getGender());
+        	st.setString(5, Student.getCity());
+        	st.setString(6, Student.getProfession());
+        	st.setString(7, Student.getNote());
+        	st.setInt(8, Student.getGrade());
+        	st.executeUpdate();
         	}catch(SQLException e) {
         		e.printStackTrace();
         	}
