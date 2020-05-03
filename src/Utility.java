@@ -11,7 +11,8 @@ import com.mysql.cj.jdbc.result.ResultSetMetaData;
 public class Utility {
 	private static Connection con = null;
 	private static Utility ut;
-    public static Connection GetConnection() {
+    //连接mysql数据库//
+	public static Connection GetConnection() {
     if(con != null) {
     	return con;
     }
@@ -25,7 +26,7 @@ public class Utility {
     	return con;
     	}
     }
-    
+   //检测用户是否存在//
     public static boolean userExist(String name, String password) {
     	PreparedStatement st = null; 
     	ResultSet rs = null;
@@ -61,31 +62,29 @@ public class Utility {
      }
      return false;
     }
-    
-    public static ResultSet GetUser() {
+    //获取用户信息//
+    public static void GetUser(String a) {
     	PreparedStatement st = null; 
     	ResultSet rs = null;
-    	ArrayList<String> arrcolname = new ArrayList<String>();
-    	ArrayList<String> arrcolout = new ArrayList<String>();
     	try {
     		GetConnection();
-        	st = con.prepareStatement("select * from schoolnumber");
+        	st = con.prepareStatement("select * from schoolnumber where Name = ?");
+        	st.setString(1, a);
         	rs = st.executeQuery();
         	while(rs.next()) {
-        		java.sql.ResultSetMetaData rsmd = rs.getMetaData();
-        		 int icolnum = rsmd.getColumnCount();
-                 for (int i = 1; i <= icolnum; i++) {
-                     arrcolname.add(rsmd.getColumnName(i).toString());
-                     arrcolout.add(rs.getString(i));
-                 	}
+        		Student.setID(rs.getInt("ID"));
+        		Student.setName(rs.getString("Name"));
+        		Student.setGender(rs.getString("Gender"));
+        		Student.setCity(rs.getString("City"));
+        		Student.setProfession(rs.getString("Profession"));
+        		Student.setGrade(rs.getInt("Grade"));
+        		Student.setNote(rs.getString("Note"));
              	}
-        	rs.close();
         	}catch(SQLException e) {
         		e.printStackTrace();
         	}
-    	return rs;
     }
-   
+   //搜索姓名//
     public static boolean searchUser(String name) {
     	PreparedStatement st = null; 
     	ResultSet rs = null;
@@ -104,33 +103,17 @@ public class Utility {
         	}
     }catch(SQLException e) {
    	 e.printStackTrace();
-    }finally {
-   	 try {
-   		 if(rs!=null) {
-   			 rs.close();
-   		 }
-   	 }catch(SQLException e) {
-   		 e.printStackTrace();
-   	 }
-   	 try {
-   		 if(st!=null) {
-   			 st.close();
-   		 }
-   	 }catch(SQLException e) {
-   		 e.printStackTrace();
-   	 }
-    }
+    	}
     return false;
    }
+    //删除信息//
     public static void deleteUser(String a) {
     	PreparedStatement st = null; 
-    	ResultSet rs = null;
     	try {
     		GetConnection();
-    		String sql = "delete from schoolnumber where Name = '"+a+"'";
-    		Statement stmt = con.createStatement();
-    		stmt.executeUpdate(sql);
-    		con.close();
+    		st = con.prepareStatement("delete from schoolnumber where Name = ?");
+    		st.setString(1, a);
+    		st.execute();
     	}catch(SQLException e) {
       		 e.printStackTrace();
       	 }
