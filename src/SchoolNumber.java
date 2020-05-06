@@ -54,6 +54,11 @@ public class SchoolNumber extends JFrame{
 			JTextField no = new JTextField(Student.getNote()+ 10);
 			JTextField gr = new JTextField(""+Student.getGrade(), 10);
 			JButton changebtn = new JButton("修改数据");
+			changebtn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+				}
+			});
 			sn = STAddPanel(change, "学号： ");
 			nam = STAddPanel(change, "性别： ");
 			ge = STAddPanel(change, "籍贯： ");
