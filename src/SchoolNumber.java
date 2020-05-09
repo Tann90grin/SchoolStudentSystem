@@ -21,8 +21,8 @@ public class SchoolNumber extends JFrame{
 	JFrame ch;
 	Container c = getContentPane();
 	Boolean mbt;
-	JTextField ID, sn, na, ge, ci, bi, pr, no, gr;
-	JPasswordField Password;
+	JTextField ID, sn, na, ge, ci, bi, pr, no, gr, nam;
+	JPasswordField password;
 	JLabel id, p, t;
 	JPanel menuPanel, mainPanel;
 	JButton mcheckbtn, Add, Search, Change, Delete;
@@ -31,44 +31,169 @@ public class SchoolNumber extends JFrame{
 	JMenuItem add, search, change, delete;
 	Font font = new Font("Default", Font.PLAIN, 32);
 	
-	public JTextField STAddPanel(JPanel panel, String label) {
+	public JTextField STAddPanel(JPanel panel, String label, String value) {
 		JPanel row = new JPanel();
 		row.add(new JLabel(label));
-		JTextField input = new JTextField("", 10);
+		JTextField input = new JTextField(value, 10);
+		row.add(input);
+		panel.add(row);
+		return input;
+	}
+	public JPasswordField PSAddPanel(JPanel panel, String label, String value) {
+		JPanel row = new JPanel();
+		row.add(new JLabel(label));
+		JPasswordField input = new JPasswordField(value, 10);
 		row.add(input);
 		panel.add(row);
 		return input;
 	}
 	//生成每个JPanel中的JTextField//
+	public void CreateMainPanel() {
+		JPanel mainPanel = new JPanel();
+		c.removeAll();
+		c.add(mainPanel);
+		JButton changebtn = new JButton("修改数据");
+		changebtn.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+		JButton addbtn = new JButton("添加数据");
+		addbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CreateAddPanel();
+			}
+		});
+		JButton searchbtn = new JButton("搜索数据");
+		searchbtn.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				JPanel sp = new JPanel();
+				sp.setVisible(true);
+				c.removeAll();
+				c.add(sp);
+				JLabel n = new JLabel("姓名： ");
+				JTextField na = new JTextField("", 10);
+				JButton se = new JButton("搜索");
+				se.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(Utility.searchUser(na.getText())==true) {
+							int dialogButton = JOptionPane.YES_NO_OPTION;
+				            JOptionPane.showConfirmDialog (null, "你要搜索"+na.getText()+"吗？","警告", dialogButton);
+				            if(dialogButton == JOptionPane.YES_OPTION) {
+				            	CreateChangePanel(na.getText());
+				            if(dialogButton == JOptionPane.NO_OPTION) {
+				            	remove(dialogButton);
+				                }
+				              }
+						}
+						else {
+							JOptionPane d =new JOptionPane();
+							d.showMessageDialog(null, "请输入正确的姓名！");
+						}
+					}
+				});
+				sp.add(n);
+				sp.add(na);
+				sp.add(se);
+				f.revalidate();
+				f.repaint();
+			}
+		});
+		JButton deletebtn = new JButton("删除数据");
+		deletebtn.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				JPanel dp = new JPanel();
+				dp.setVisible(true);
+				c.removeAll();
+				c.add(dp);
+				JLabel n = new JLabel("姓名： ");
+				JTextField na = new JTextField("", 10);
+				JButton de = new JButton("搜索");
+				de.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(Utility.searchUser(na.getText())==true) {
+							int dialogButton = JOptionPane.YES_NO_OPTION;
+				            JOptionPane.showConfirmDialog (null, "你要删除"+na.getText()+"吗？","WARNING", dialogButton);
+				            if(dialogButton == JOptionPane.YES_OPTION) {
+				            	Utility.deleteUser(na.getText());
+				            	JOptionPane d = new JOptionPane();
+								d.showMessageDialog(null, "数据已删除！");
+				            if(dialogButton == JOptionPane.NO_OPTION) {
+				            	remove(dialogButton);
+				                }
+				              }
+						}
+						else {
+							JOptionPane d =new JOptionPane();
+							d.showMessageDialog(null, "请输入正确的姓名！");
+						}
+					}
+				});
+				dp.add(n);
+				dp.add(na);
+				dp.add(de);
+				f.revalidate();
+				f.repaint();
+			}
+		});
+		mainPanel.add(changebtn);
+		mainPanel.add(addbtn);
+		mainPanel.add(searchbtn);
+		mainPanel.add(deletebtn);
+		f.revalidate();
+		f.repaint();
+	}
 	public void CreateChangePanel(String a) {
 			Utility.GetUser(a);
 			JPanel change = new JPanel();
 			change.setVisible(true);
 			c.removeAll();
-			JTextField sn = new JTextField(""+Student.getID(), 10);
-			JTextField nam = new JTextField(Student.getName(), 10);
-			JTextField ge = new JTextField(Student.getGender(), 10);
-			JTextField ci = new JTextField(Student.getCity(), 10);
-			JTextField bi = new JTextField(""+Student.getBirthday(), 10);
-			JTextField pr = new JTextField(Student.getProfession(), 10);
-			JTextField no = new JTextField(Student.getNote()+ 10);
-			JTextField gr = new JTextField(""+Student.getGrade(), 10);
 			JButton changebtn = new JButton("修改数据");
 			changebtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					
+					int dialogButton = JOptionPane.YES_NO_OPTION;
+		            JOptionPane.showConfirmDialog (null, "你要修改"+a+"吗？","警告", dialogButton);
+		            if(dialogButton == JOptionPane.YES_OPTION) {
+		            	Student.setID(Integer.parseInt(sn.getText()));
+		        		Student.setName(nam.getText());
+		        		Student.setBirthday(bi.getText());
+		        		Student.setGender(ge.getText());
+		        		Student.setCity(ci.getText());
+		        		Student.setProfession(pr.getText());
+		        		Student.setGrade(Integer.parseInt(no.getText()));
+		        		Student.setNote(gr.getText());
+		        		Utility.UpdateUser(a);
+		            if(dialogButton == JOptionPane.NO_OPTION) {
+		            	remove(dialogButton);
+		                }
+		              }
 				}
 			});
-			sn = STAddPanel(change, "学号： ");
-			nam = STAddPanel(change, "性别： ");
-			ge = STAddPanel(change, "籍贯： ");
-			ci = STAddPanel(change, "专业： ");
-			bi = STAddPanel(change, "出生日期：");
-			no = STAddPanel(change, "年级： ");
-			pr = STAddPanel(change, "备注： ");
+			JButton back = new JButton("返回");
+			back.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					int dialogButton = JOptionPane.YES_NO_OPTION;
+		            JOptionPane.showConfirmDialog (null, "你要返回吗？未保存的数据将会消失。","警告", dialogButton);
+		            if(dialogButton == JOptionPane.YES_OPTION) {
+		            	CreateMainPanel();
+		            if(dialogButton == JOptionPane.NO_OPTION) {
+		            	remove(dialogButton);
+				      	}
+		            }
+				}
+			});
+			sn = STAddPanel(change, "学号： ", ""+Student.getID());
+			nam = STAddPanel(change, "性别： ",Student.getName());
+			ge = STAddPanel(change, "籍贯： ",Student.getGender());
+			ci = STAddPanel(change, "专业： ",Student.getCity());
+			bi = STAddPanel(change, "出生日期：",""+Student.getBirthday());
+			pr = STAddPanel(change, "专业:", Student.getProfession());
+			no = STAddPanel(change, "年级： ", ""+Student.getGrade());
+			gr = STAddPanel(change, "备注： ", Student.getNote() );
 			change.add(changebtn);
+			change.add(back);
 			c.add(change);
-			change.setLayout(new GridLayout(9,2,4,4));
+			change.setLayout(new GridLayout(9,1,2,2));
 			f.revalidate();
 			f.repaint();
 	}
@@ -77,40 +202,58 @@ public class SchoolNumber extends JFrame{
 		JPanel change = new JPanel();
 		change.setVisible(true);
 		c.removeAll();
-		JTextField sn = new JTextField("", 10);
-		JTextField nam = new JTextField("", 10);
-		JTextField ge = new JTextField("", 10);
-		JTextField ci = new JTextField("", 10);
-		JTextField bi = new JTextField("", 10);
-		JTextField pr = new JTextField("", 10);
-		JTextField no = new JTextField("", 10);
-		JTextField gr = new JTextField("", 10);
-		int id = Integer.parseInt(sn.getText());
-		int grade = Integer.parseInt(gr.getText());
-		int birthday = Integer.parseInt(bi.getText());
 		JButton addbtn = new JButton("添加数据");
 		addbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-        		Student.setID(id);
-        		Student.setName(nam.getText());
-        		Student.setBirthday(birthday);
-        		Student.setGender(ci.getText());
-        		Student.setCity(bi.getText());
-        		Student.setProfession(pr.getText());
-        		Student.setGrade(grade);
-        		Student.setNote(gr.getText());
+				int dialogButton = JOptionPane.YES_NO_OPTION;
+	            JOptionPane.showConfirmDialog (null, "你要添加此用户吗？","警告", dialogButton);
+	            if(dialogButton == JOptionPane.YES_OPTION) {
+					Student.setID(Integer.parseInt(sn.getText()));
+	        		Student.setName(nam.getText());
+	        		Student.setBirthday(bi.getText());
+	        		Student.setGender(ci.getText());
+	        		Student.setCity(ci.getText());
+	        		Student.setProfession(pr.getText());
+	        		Student.setGrade(Integer.parseInt(no.getText()));
+	        		Student.setNote(gr.getText());
+	        		if(Utility.detectUser(Student.getName())==false) {
+						Utility.AddUser();
+	        		}
+	        		else {
+						JOptionPane d = new JOptionPane();
+						d.showMessageDialog(null, "用户已存在！");
+	        		}
+	            if(dialogButton == JOptionPane.NO_OPTION) {
+	            	remove(dialogButton);
+	                }
+	              }
 			}
 		});	
-		sn = STAddPanel(change, "学号： ");
-		nam = STAddPanel(change, "性别： ");
-		ge = STAddPanel(change, "籍贯： ");
-		ci = STAddPanel(change, "专业： ");
-		bi = STAddPanel(change, "出生日期：");
-		no = STAddPanel(change, "年级： ");
-		pr = STAddPanel(change, "备注： ");
+		JButton back = new JButton("返回");
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int dialogButton = JOptionPane.YES_NO_OPTION;
+	            JOptionPane.showConfirmDialog (null, "你要返回吗？未保存的数据将会消失。","警告", dialogButton);
+	            if(dialogButton == JOptionPane.YES_OPTION) {
+	            	CreateMainPanel();
+	            if(dialogButton == JOptionPane.NO_OPTION) {
+	            	remove(dialogButton);
+			      	}
+	            }
+			}
+		});
+		sn = STAddPanel(change, "学号： ", ""+Student.getID());
+		nam = STAddPanel(change, "姓名： ",Student.getName());
+		ge = STAddPanel(change, "性别：  ",Student.getGender());
+		ci = STAddPanel(change, "城市：  ",Student.getCity());
+		bi = STAddPanel(change, "出生日期：",""+Student.getBirthday());
+		pr = STAddPanel(change, "专业:", Student.getProfession());
+		no = STAddPanel(change, "年级： ", ""+Student.getGrade());
+		gr = STAddPanel(change, "备注： ", Student.getNote() );
 		change.add(addbtn);
+		change.add(back);
 		c.add(change);
-		change.setLayout(new GridLayout(9,2,4,4));
+		change.setLayout(new GridLayout(9,1,2,2));
 		f.revalidate();
 		f.repaint();
 }
@@ -125,107 +268,11 @@ public class SchoolNumber extends JFrame{
 		JLabel t = new JLabel("学生学籍管理系统");
 		t.setFont(font);
 		t.setVisible(true);
-		JLabel id = new JLabel("用户名： ");
-		JTextField ID = new JTextField("", 10);
-		JLabel p = new JLabel("密码： ");
-		JPasswordField Password = new JPasswordField("", 10);
 		JButton mcheckbtn = new JButton("检查系统");
 		mcheckbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(Utility.userExist(ID.getText(), Password.getText())==true) {
-					JPanel mainPanel = new JPanel();
-					c.remove(menuPanel);
-					c.add(mainPanel);
-					JButton changebtn = new JButton("修改数据");
-					changebtn.addActionListener(new ActionListener(){
-						public void actionPerformed(ActionEvent e) {
-
-						}
-					});
-					JButton addbtn = new JButton("添加数据");
-					addbtn.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							CreateAddPanel();
-						}
-					});
-					JButton searchbtn = new JButton("搜索数据");
-					searchbtn.addActionListener(new ActionListener(){
-						public void actionPerformed(ActionEvent e) {
-							JPanel sp = new JPanel();
-							sp.setVisible(true);
-							c.removeAll();
-							c.add(sp);
-							JLabel n = new JLabel("姓名： ");
-							JTextField na = new JTextField("", 10);
-							JButton se = new JButton("搜索");
-							se.addActionListener(new ActionListener() {
-								public void actionPerformed(ActionEvent e) {
-									if(Utility.searchUser(na.getText())==true) {
-										int dialogButton = JOptionPane.YES_NO_OPTION;
-							            JOptionPane.showConfirmDialog (null, "你要搜索"+na.getText()+"吗？","WARNING", dialogButton);
-							            if(dialogButton == JOptionPane.YES_OPTION) {
-							            	CreateChangePanel(na.getText());
-							            if(dialogButton == JOptionPane.NO_OPTION) {
-							            	remove(dialogButton);
-							                }
-							              }
-									}
-									else {
-										JOptionPane d =new JOptionPane();
-										d.showMessageDialog(null, "请输入正确的姓名！");
-									}
-								}
-							});
-							sp.add(n);
-							sp.add(na);
-							sp.add(se);
-							f.revalidate();
-							f.repaint();
-						}
-					});
-					JButton deletebtn = new JButton("删除数据");
-					deletebtn.addActionListener(new ActionListener(){
-						public void actionPerformed(ActionEvent e) {
-							JPanel dp = new JPanel();
-							dp.setVisible(true);
-							c.removeAll();
-							c.add(dp);
-							JLabel n = new JLabel("姓名： ");
-							JTextField na = new JTextField("", 10);
-							JButton de = new JButton("搜索");
-							de.addActionListener(new ActionListener() {
-								public void actionPerformed(ActionEvent e) {
-									if(Utility.searchUser(na.getText())==true) {
-										int dialogButton = JOptionPane.YES_NO_OPTION;
-							            JOptionPane.showConfirmDialog (null, "你要删除"+na.getText()+"吗？","WARNING", dialogButton);
-							            if(dialogButton == JOptionPane.YES_OPTION) {
-							            	Utility.deleteUser(na.getText());
-							            	JOptionPane d = new JOptionPane();
-											d.showMessageDialog(null, "数据已删除！");
-							            if(dialogButton == JOptionPane.NO_OPTION) {
-							            	remove(dialogButton);
-							                }
-							              }
-									}
-									else {
-										JOptionPane d =new JOptionPane();
-										d.showMessageDialog(null, "请输入正确的姓名！");
-									}
-								}
-							});
-							dp.add(n);
-							dp.add(na);
-							dp.add(de);
-							f.revalidate();
-							f.repaint();
-						}
-					});
-					mainPanel.add(changebtn);
-					mainPanel.add(addbtn);
-					mainPanel.add(searchbtn);
-					mainPanel.add(deletebtn);
-					f.revalidate();
-					f.repaint();
+				if(Utility.userExist(ID.getText(), password.getText())==true) {
+					CreateMainPanel();
 				}
 				else{
 					JOptionPane d = new JOptionPane();
@@ -262,10 +309,8 @@ public class SchoolNumber extends JFrame{
 		mb.add(m);
 		mb.add(help);
 		menuPanel.add(t);
-		menuPanel.add(id);
-		menuPanel.add(ID);
-		menuPanel.add(p);
-		menuPanel.add(Password);
+		ID = STAddPanel(menuPanel, "用户名： ", "");
+		password = PSAddPanel(menuPanel, "密码： ", "");
 		menuPanel.add(mcheckbtn);
 		menuPanel.setVisible(true);
 		menuPanel.setLayout(new GridLayout(5, 2, 2, 2));
