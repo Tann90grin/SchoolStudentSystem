@@ -59,7 +59,7 @@ public class Utility {
         	while(rs.next()) {
         		Student.setID(rs.getInt("ID"));
         		Student.setName(rs.getString("Name"));
-        		Student.setBirthday(rs.getInt("Birthday"));
+        		Student.setBirthday(rs.getString("Birthday"));
         		Student.setGender(rs.getString("Gender"));
         		Student.setCity(rs.getString("City"));
         		Student.setProfession(rs.getString("Profession"));
@@ -74,10 +74,10 @@ public class Utility {
     	PreparedStatement st = null; 
     	try {
     		GetConnection();
-        	st = con.prepareStatement("update schoolnumber set values(?, ?, ?, ?, ?, ?, ?, ?) where Name = ? ");
+        	st = con.prepareStatement("update schoolnumber set ID = ?, Name = ?, Birthday = ?, Gender = ?, City = ?, Profession = ?, Note = ?, Grade = ? where Name = ? ");
         	st.setInt(1, Student.getID());
         	st.setString(2, Student.getName());
-        	st.setInt(3, Student.getBirthday());
+        	st.setString(3, Student.getBirthday());
         	st.setString(4, Student.getGender());
         	st.setString(5, Student.getCity());
         	st.setString(6, Student.getProfession());
@@ -85,6 +85,7 @@ public class Utility {
         	st.setInt(8, Student.getGrade());
         	st.setString(9, a);
         	st.executeUpdate();
+        	System.out.println(st.executeUpdate());
         	}catch(SQLException e) {
         		e.printStackTrace();
         	}
@@ -96,7 +97,7 @@ public class Utility {
         	st = con.prepareStatement("insert into schoolnumber values(?,?,?,?,?,?,?,?)");
         	st.setInt(1, Student.getID());
         	st.setString(2, Student.getName());
-        	st.setInt(3, Student.getBirthday());
+        	st.setString(3, Student.getBirthday());
         	st.setString(4, Student.getGender());
         	st.setString(5, Student.getCity());
         	st.setString(6, Student.getProfession());
@@ -118,6 +119,26 @@ public class Utility {
         	rs = st.executeQuery();
         	System.out.println(name);
         	if(rs != null) {
+        		rs.last();
+        		System.out.println(rs.getRow());
+        		if(rs.getRow()==1) {
+        			return true;
+        		}
+        	}
+    }catch(SQLException e) {
+   	 e.printStackTrace();
+    	}
+    return false;
+   }
+    public static boolean detectUser(String a) {
+    	PreparedStatement st = null; 
+    	ResultSet rs = null;
+    	try {
+    		GetConnection();
+    		st = con.prepareStatement("select * from schoolnumber where name = ?");
+    		st.setString(1, a);
+    		rs = st.executeQuery();
+    		if(rs != null) {
         		rs.last();
         		System.out.println(rs.getRow());
         		if(rs.getRow()==1) {
