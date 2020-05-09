@@ -1,12 +1,13 @@
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Date;
 
 public class Student {
 	private static int id;
 	private static String name;
 	private static String gender;
-	private static int birthday;
+	private static String birthday;
 	private static String city;
 	private static String profession;
 	private static int grade;
@@ -30,10 +31,10 @@ public class Student {
 	public static void setGender(String sqlgender) {
 		gender = sqlgender;
 	}
-	public static int getBirthday() {
+	public static String getBirthday() {
 		return birthday;
 	}
-	public static void setBirthday(int sqlbirthday) {
+	public static void setBirthday(String sqlbirthday) {
 		birthday = sqlbirthday;
 	}
 	public static String getCity() {
