@@ -32,7 +32,52 @@ public class SchoolNumber extends JFrame{
 	JMenu m, help;
 	JMenuItem add, search, change, delete;
 	Font font = new Font("Default", Font.PLAIN, 32);
-	
+	ActionListener addListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			int dialogButton = JOptionPane.YES_NO_OPTION;
+            JOptionPane.showConfirmDialog (null, "你要添加此用户吗？","警告", dialogButton);
+            if(dialogButton == JOptionPane.YES_OPTION) {
+				Student.setID(Integer.parseInt(sn.getText()));
+        		Student.setName(nam.getText());
+        		Student.setBirthday(bi.getText());
+        		Student.setGender(ci.getText());
+        		Student.setCity(ci.getText());
+        		Student.setProfession(pr.getText());
+        		Student.setGrade(Integer.parseInt(no.getText()));
+        		Student.setNote(gr.getText());
+        		if(Utility.detectUser(Student.getName())==false) {
+					Utility.AddUser();
+        		}
+        		else {
+					JOptionPane d = new JOptionPane();
+					d.showMessageDialog(null, "用户已存在！");
+        		}
+            if(dialogButton == JOptionPane.NO_OPTION) {
+            	remove(dialogButton);
+             	}
+            }
+		}
+	};
+	ActionListener changeListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			int dialogButton = JOptionPane.YES_NO_OPTION;
+            JOptionPane.showConfirmDialog (null, "你要修改"+a+"吗？","警告", dialogButton);
+            if(dialogButton == JOptionPane.YES_OPTION) {
+            	Student.setID(Integer.parseInt(sn.getText()));
+        		Student.setName(nam.getText());
+        		Student.setBirthday(bi.getText());
+        		Student.setGender(ge.getText());
+        		Student.setCity(ci.getText());
+        		Student.setProfession(pr.getText());
+        		Student.setGrade(Integer.parseInt(no.getText()));
+        		Student.setNote(gr.getText());
+        		Utility.UpdateUser(a);
+            if(dialogButton == JOptionPane.NO_OPTION) {
+            	remove(dialogButton);
+                }
+              }
+		}
+	};
 	ActionListener exitListener = new ActionListener(){
 		public void actionPerformed(ActionEvent e) {
 			JMenuItem exit = (JMenuItem)e.getSource();
@@ -47,6 +92,29 @@ public class SchoolNumber extends JFrame{
 		panel.add(row);
 		return input;
 	}
+	ActionListener addPanelListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			CreateAddPanel();
+		}
+	};
+	ActionListener searchListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			if(Utility.searchUser(na.getText())==true) {
+				int dialogButton = JOptionPane.YES_NO_OPTION;
+	            JOptionPane.showConfirmDialog (null, "你要搜索"+na.getText()+"吗？","警告", dialogButton);
+	            if(dialogButton == JOptionPane.YES_OPTION) {
+	            	CreateChangePanel(na.getText());
+	            if(dialogButton == JOptionPane.NO_OPTION) {
+	            	remove(dialogButton);
+	                }
+	            }
+			}
+			else {
+				JOptionPane d =new JOptionPane();
+				d.showMessageDialog(null, "请输入正确的姓名！");
+			}
+		}
+	};
 	public JPasswordField PSAddPanel(JPanel panel, String label, String value) {
 		JPanel row = new JPanel();
 		row.add(new JLabel(label));
@@ -55,7 +123,39 @@ public class SchoolNumber extends JFrame{
 		panel.add(row);
 		return input;
 	}
-	public JComboBox CBAddPanel(JPanel panel, String label) {
+	ActionListener backListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			int dialogButton = JOptionPane.YES_NO_OPTION;
+            JOptionPane.showConfirmDialog (null, "你要返回吗？未保存的数据将会消失。","警告", dialogButton);
+            if(dialogButton == JOptionPane.YES_OPTION) {
+            	CreateMainPanel();
+            if(dialogButton == JOptionPane.NO_OPTION) {
+            	remove(dialogButton);
+		      	}
+            }
+		}
+	};
+	ActionListener deleteListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			if(Utility.searchUser(na.getText())==true) {
+				int dialogButton = JOptionPane.YES_NO_OPTION;
+	            JOptionPane.showConfirmDialog (null, "你要删除"+na.getText()+"吗？","WARNING", dialogButton);
+	            if(dialogButton == JOptionPane.YES_OPTION) {
+	            	Utility.deleteUser(na.getText());
+	            	JOptionPane d = new JOptionPane();
+					d.showMessageDialog(null, "数据已删除！");
+	            if(dialogButton == JOptionPane.NO_OPTION) {
+	            	remove(dialogButton);
+	                }
+	              }
+			}
+			else {
+				JOptionPane d =new JOptionPane();
+				d.showMessageDialog(null, "请输入正确的姓名！");
+			}
+		}
+	};
+public JComboBox CBAddPanel(JPanel panel, String label) {
 		JPanel row =new JPanel();
 		row.add(new JLabel(label));
 		JComboBox input = new JComboBox<String>();
@@ -93,30 +193,9 @@ public class SchoolNumber extends JFrame{
 				JLabel n = new JLabel("姓名： ");
 				JTextField na = new JTextField("", 10);
 				JButton se = new JButton("搜索");
-				se.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if(Utility.searchUser(na.getText())==true) {
-							int dialogButton = JOptionPane.YES_NO_OPTION;
-				            JOptionPane.showConfirmDialog (null, "你要搜索"+na.getText()+"吗？","警告", dialogButton);
-				            if(dialogButton == JOptionPane.YES_OPTION) {
-				            	CreateChangePanel(na.getText());
-				            if(dialogButton == JOptionPane.NO_OPTION) {
-				            	remove(dialogButton);
-				                }
-				            }
-						}
-						else {
-							JOptionPane d =new JOptionPane();
-							d.showMessageDialog(null, "请输入正确的姓名！");
-						}
-					}
-				});
+				se.addActionListener(searchListener);
 		JButton addbtn = new JButton("添加数据");
-		addbtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				CreateAddPanel();
-			}
-		});
+		addbtn.addActionListener(addPanelListener);
 		JButton searchbtn = new JButton("搜索数据");
 		searchbtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
@@ -127,24 +206,7 @@ public class SchoolNumber extends JFrame{
 				JLabel n = new JLabel("姓名： ");
 				JTextField na = new JTextField("", 10);
 				JButton se = new JButton("搜索");
-				se.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if(Utility.searchUser(na.getText())==true) {
-							int dialogButton = JOptionPane.YES_NO_OPTION;
-				            JOptionPane.showConfirmDialog (null, "你要搜索"+na.getText()+"吗？","警告", dialogButton);
-				            if(dialogButton == JOptionPane.YES_OPTION) {
-				            	CreateChangePanel(na.getText());
-				            if(dialogButton == JOptionPane.NO_OPTION) {
-				            	remove(dialogButton);
-				                }
-				            }
-						}
-						else {
-							JOptionPane d =new JOptionPane();
-							d.showMessageDialog(null, "请输入正确的姓名！");
-						}
-					}
-				});
+				se.addActionListener(searchListener);
 				sp.add(n);
 				sp.add(na);
 				sp.add(se);
@@ -162,26 +224,7 @@ public class SchoolNumber extends JFrame{
 				JLabel n = new JLabel("姓名： ");
 				JTextField na = new JTextField("", 10);
 				JButton de = new JButton("搜索");
-				de.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if(Utility.searchUser(na.getText())==true) {
-							int dialogButton = JOptionPane.YES_NO_OPTION;
-				            JOptionPane.showConfirmDialog (null, "你要删除"+na.getText()+"吗？","WARNING", dialogButton);
-				            if(dialogButton == JOptionPane.YES_OPTION) {
-				            	Utility.deleteUser(na.getText());
-				            	JOptionPane d = new JOptionPane();
-								d.showMessageDialog(null, "数据已删除！");
-				            if(dialogButton == JOptionPane.NO_OPTION) {
-				            	remove(dialogButton);
-				                }
-				              }
-						}
-						else {
-							JOptionPane d =new JOptionPane();
-							d.showMessageDialog(null, "请输入正确的姓名！");
-						}
-					}
-				});
+				de.addActionListener(deleteListener);
 				dp.add(n);
 				dp.add(na);
 				dp.add(de);
@@ -202,39 +245,9 @@ public class SchoolNumber extends JFrame{
 			change.setVisible(true);
 			c.removeAll();
 			JButton changebtn = new JButton("修改数据");
-			changebtn.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					int dialogButton = JOptionPane.YES_NO_OPTION;
-		            JOptionPane.showConfirmDialog (null, "你要修改"+a+"吗？","警告", dialogButton);
-		            if(dialogButton == JOptionPane.YES_OPTION) {
-		            	Student.setID(Integer.parseInt(sn.getText()));
-		        		Student.setName(nam.getText());
-		        		Student.setBirthday(bi.getText());
-		        		Student.setGender(ge.getText());
-		        		Student.setCity(ci.getText());
-		        		Student.setProfession(pr.getText());
-		        		Student.setGrade(Integer.parseInt(no.getText()));
-		        		Student.setNote(gr.getText());
-		        		Utility.UpdateUser(a);
-		            if(dialogButton == JOptionPane.NO_OPTION) {
-		            	remove(dialogButton);
-		                }
-		              }
-				}
-			});
+			changebtn.addActionListener(changeListener);
 			JButton back = new JButton("返回");
-			back.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					int dialogButton = JOptionPane.YES_NO_OPTION;
-		            JOptionPane.showConfirmDialog (null, "你要返回吗？未保存的数据将会消失。","警告", dialogButton);
-		            if(dialogButton == JOptionPane.YES_OPTION) {
-		            	CreateMainPanel();
-		            if(dialogButton == JOptionPane.NO_OPTION) {
-		            	remove(dialogButton);
-				      	}
-		            }
-				}
-			});
+			back.addActionListener(backListener);
 			sn = STAddPanel(change, "学号： ", ""+Student.getID());
 			nam = STAddPanel(change, "姓名： ",Student.getName());
 			ge = STAddPanel(change, "性别：  ",Student.getGender());
@@ -256,45 +269,9 @@ public class SchoolNumber extends JFrame{
 		change.setVisible(true);
 		c.removeAll();
 		JButton addbtn = new JButton("添加数据");
-		addbtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int dialogButton = JOptionPane.YES_NO_OPTION;
-	            JOptionPane.showConfirmDialog (null, "你要添加此用户吗？","警告", dialogButton);
-	            if(dialogButton == JOptionPane.YES_OPTION) {
-					Student.setID(Integer.parseInt(sn.getText()));
-	        		Student.setName(nam.getText());
-	        		Student.setBirthday(bi.getText());
-	        		Student.setGender(ci.getText());
-	        		Student.setCity(ci.getText());
-	        		Student.setProfession(pr.getText());
-	        		Student.setGrade(Integer.parseInt(no.getText()));
-	        		Student.setNote(gr.getText());
-	        		if(Utility.detectUser(Student.getName())==false) {
-						Utility.AddUser();
-	        		}
-	        		else {
-						JOptionPane d = new JOptionPane();
-						d.showMessageDialog(null, "用户已存在！");
-	        		}
-	            if(dialogButton == JOptionPane.NO_OPTION) {
-	            	remove(dialogButton);
-	             	}
-	            }
-			}
-		});	
+		addbtn.addActionListener(addListener);
 		JButton back = new JButton("返回");
-		back.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int dialogButton = JOptionPane.YES_NO_OPTION;
-	            JOptionPane.showConfirmDialog (null, "你要返回吗？未保存的数据将会消失。","警告", dialogButton);
-	            if(dialogButton == JOptionPane.YES_OPTION) {
-	            	CreateMainPanel();
-	            if(dialogButton == JOptionPane.NO_OPTION) {
-	            	remove(dialogButton);
-			      	}
-	            }
-			}
-		});
+		back.addActionListener(backListener);
 		sn = STAddPanel(change, "学号： ", "");
 		nam = STAddPanel(change, "姓名： ", "");
 		ge = STAddPanel(change, "性别：  ", "");
@@ -309,7 +286,7 @@ public class SchoolNumber extends JFrame{
 		change.setLayout(new GridLayout(9,1,2,2));
 		f.revalidate();
 		f.repaint();
-	}
+		}
 	//面板代码//
 	public SchoolNumber() {
 		f.setSize(960, 720);
