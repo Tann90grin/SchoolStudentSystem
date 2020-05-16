@@ -32,7 +32,7 @@ public class SchoolNumber extends JFrame{
 	JMenu m, help;
 	JMenuItem add, search, change, delete;
 	Font font = new Font("Default", Font.PLAIN, 32);
-	ActionListener addListener = new ActionListener() {
+	private class AddListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			int dialogButton = JOptionPane.YES_NO_OPTION;
             JOptionPane.showConfirmDialog (null, "你要添加此用户吗？","警告", dialogButton);
@@ -58,7 +58,7 @@ public class SchoolNumber extends JFrame{
             }
 		}
 	};
-	ActionListener changeListener = new ActionListener() {
+	private class ChangeListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			int dialogButton = JOptionPane.YES_NO_OPTION;
             JOptionPane.showConfirmDialog (null, "你要修改"+a+"吗？","警告", dialogButton);
@@ -78,7 +78,7 @@ public class SchoolNumber extends JFrame{
               }
 		}
 	};
-	ActionListener exitListener = new ActionListener(){
+	private class ExitListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			JMenuItem exit = (JMenuItem)e.getSource();
 			System.exit(NORMAL);
@@ -92,12 +92,12 @@ public class SchoolNumber extends JFrame{
 		panel.add(row);
 		return input;
 	}
-	ActionListener addPanelListener = new ActionListener() {
+	private class AddPanelListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			CreateAddPanel();
 		}
 	};
-	ActionListener searchListener = new ActionListener() {
+	private class SearchListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if(Utility.searchUser(na.getText())==true) {
 				int dialogButton = JOptionPane.YES_NO_OPTION;
@@ -123,7 +123,7 @@ public class SchoolNumber extends JFrame{
 		panel.add(row);
 		return input;
 	}
-	ActionListener backListener = new ActionListener() {
+	private class BackListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			int dialogButton = JOptionPane.YES_NO_OPTION;
             JOptionPane.showConfirmDialog (null, "你要返回吗？未保存的数据将会消失。","警告", dialogButton);
@@ -170,7 +170,7 @@ public JComboBox CBAddPanel(JPanel panel, String label) {
 		panel.add(row);
 		return input;
 	}
-	public JLabel LBAddPanel(JPanel panel, String title, Font font) {
+public JLabel LBAddPanel(JPanel panel, String title, Font font) {
 		JPanel row = new JPanel();
 		JLabel label = new JLabel(title);
 		label.setFont(font);
@@ -179,11 +179,11 @@ public JComboBox CBAddPanel(JPanel panel, String label) {
 		return label;
 	}
 	//生成每个JPanel中的JTextField//
-	public void CreateMainPanel() {
-		JPanel mainPanel = new JPanel();
-		c.removeAll();
-		c.add(mainPanel);
-		JButton changebtn = new JButton("修改数据");
+public void CreateMainPanel() {
+	JPanel mainPanel = new JPanel();
+	c.removeAll();
+	c.add(mainPanel);
+	JButton changebtn = new JButton("修改数据");
 		changebtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				JPanel sp = new JPanel();
@@ -193,9 +193,9 @@ public JComboBox CBAddPanel(JPanel panel, String label) {
 				JLabel n = new JLabel("姓名： ");
 				JTextField na = new JTextField("", 10);
 				JButton se = new JButton("搜索");
-				se.addActionListener(searchListener);
+				se.addActionListener(new SearchListener());
 		JButton addbtn = new JButton("添加数据");
-		addbtn.addActionListener(addPanelListener);
+		addbtn.addActionListener(new AddPanelListener());
 		JButton searchbtn = new JButton("搜索数据");
 		searchbtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
@@ -206,7 +206,7 @@ public JComboBox CBAddPanel(JPanel panel, String label) {
 				JLabel n = new JLabel("姓名： ");
 				JTextField na = new JTextField("", 10);
 				JButton se = new JButton("搜索");
-				se.addActionListener(searchListener);
+				se.addActionListener(new SearchListener());
 				sp.add(n);
 				sp.add(na);
 				sp.add(se);
@@ -239,29 +239,30 @@ public JComboBox CBAddPanel(JPanel panel, String label) {
 		f.revalidate();
 		f.repaint();
 	}
+}
 	public void CreateChangePanel(String a) {
-			Utility.GetUser(a);
-			JPanel change = new JPanel();
-			change.setVisible(true);
-			c.removeAll();
-			JButton changebtn = new JButton("修改数据");
-			changebtn.addActionListener(changeListener);
-			JButton back = new JButton("返回");
-			back.addActionListener(backListener);
-			sn = STAddPanel(change, "学号： ", ""+Student.getID());
-			nam = STAddPanel(change, "姓名： ",Student.getName());
-			ge = STAddPanel(change, "性别：  ",Student.getGender());
-			ci = STAddPanel(change, "城市： ",Student.getCity());
-			bi = STAddPanel(change, "出生日期：",""+Student.getBirthday());
-			pr = STAddPanel(change, "专业:", Student.getProfession());
-			no = STAddPanel(change, "年级： ", ""+Student.getGrade());
-			gr = STAddPanel(change, "备注： ", Student.getNote() );
-			change.add(changebtn);
-			change.add(back);
-			c.add(change);
-			change.setLayout(new GridLayout(9,1,2,2));
-			f.revalidate();
-			f.repaint();
+		Utility.GetUser(a);
+		JPanel change = new JPanel();
+		change.setVisible(true);
+		c.removeAll();
+		JButton changebtn = new JButton("修改数据");
+		changebtn.addActionListener(new ChangeListener());
+		JButton back = new JButton("返回");
+		back.addActionListener(new BackListener());
+		sn = STAddPanel(change, "学号： ", ""+Student.getID());
+		nam = STAddPanel(change, "姓名： ",Student.getName());
+		ge = STAddPanel(change, "性别：  ",Student.getGender());
+		ci = STAddPanel(change, "城市： ",Student.getCity());
+		bi = STAddPanel(change, "出生日期：",""+Student.getBirthday());
+		pr = STAddPanel(change, "专业:", Student.getProfession());
+		no = STAddPanel(change, "年级： ", ""+Student.getGrade());
+		gr = STAddPanel(change, "备注： ", Student.getNote() );
+		change.add(changebtn);
+		change.add(back);
+		c.add(change);
+		change.setLayout(new GridLayout(9,1,2,2));
+		f.revalidate();
+		f.repaint();
 	}
 	//生成修改数据的面板//
 	public void CreateAddPanel() {
@@ -269,9 +270,9 @@ public JComboBox CBAddPanel(JPanel panel, String label) {
 		change.setVisible(true);
 		c.removeAll();
 		JButton addbtn = new JButton("添加数据");
-		addbtn.addActionListener(addListener);
+		addbtn.addActionListener(new AddListener());
 		JButton back = new JButton("返回");
-		back.addActionListener(backListener);
+		back.addActionListener(new BackListener());
 		sn = STAddPanel(change, "学号： ", "");
 		nam = STAddPanel(change, "姓名： ", "");
 		ge = STAddPanel(change, "性别：  ", "");
@@ -323,7 +324,7 @@ public JComboBox CBAddPanel(JPanel panel, String label) {
 		m.add(change);
 		m.add(delete);
 		m.add(exit);
-		exit.addActionListener(exitListener);
+		exit.addActionListener(new ExitListener());
 		search.setEnabled(mbt);
 		add.setEnabled(mbt);
 		change.setEnabled(mbt);
