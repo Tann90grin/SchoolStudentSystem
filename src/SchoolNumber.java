@@ -302,8 +302,8 @@ public class SchoolNumber extends JFrame{
 		change.setLayout(new GridLayout(9,1,2,2));
 		f.revalidate();
 		f.repaint();
-		}
 	}
+	
 	//面板代码//
 	public SchoolNumber() {
 		f.setSize(960, 720);
