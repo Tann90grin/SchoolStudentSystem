@@ -364,7 +364,7 @@ public class SchoolNumber extends JFrame{
 		f.revalidate();
 		f.repaint();
 	}
-	public static void main(String[]args) {
+	public static void main(String[] args) {
 		new SchoolNumber();
 	}
 }
