@@ -32,6 +32,13 @@ public class SchoolNumber extends JFrame{
 	JMenu m, help;
 	JMenuItem add, search, change, delete;
 	Font font = new Font("Default", Font.PLAIN, 32);
+	
+	ActionListener exitListener = new ActionListener(){
+		public void actionPerformed(ActionEvent e) {
+			JMenuItem exit = (JMenuItem)e.getSource();
+			System.exit(NORMAL);
+		}
+	};
 	public JTextField STAddPanel(JPanel panel, String label, String value) {
 		JPanel row = new JPanel();
 		row.add(new JLabel(label));
@@ -303,7 +310,6 @@ public class SchoolNumber extends JFrame{
 		f.revalidate();
 		f.repaint();
 	}
-	
 	//面板代码//
 	public SchoolNumber() {
 		f.setSize(960, 720);
@@ -340,13 +346,7 @@ public class SchoolNumber extends JFrame{
 		m.add(change);
 		m.add(delete);
 		m.add(exit);
-		class ExitListener implements ActionListener{
-			public void actionPerformed(ActionEvent e) {
-				JMenuItem exit = (JMenuItem)e.getSource();
-				System.exit(NORMAL);
-			}
-		}
-		exit.addActionListener(new ExitListener());
+		exit.addActionListener(exitListener);
 		search.setEnabled(mbt);
 		add.setEnabled(mbt);
 		change.setEnabled(mbt);
