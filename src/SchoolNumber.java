@@ -208,13 +208,17 @@ public class SchoolNumber extends JFrame{
             }
 		}
 	};
-	ActionListener deleteListener = new ActionListener() {
+	private class DeleteListener implements ActionListener {
+		private String name;
+		public DeleteListener(String name) {
+			this.name = name;
+		}
 		public void actionPerformed(ActionEvent e) {
-			if(Utility.searchUser(na.getText())==true) {
+			if(Utility.searchUser(name)==true) {
 				int dialogButton = JOptionPane.YES_NO_OPTION;
-	            JOptionPane.showConfirmDialog (null, "你要删除"+na.getText()+"吗？","WARNING", dialogButton);
+	            JOptionPane.showConfirmDialog (null, "你要删除"+name+"吗？","WARNING", dialogButton);
 	            if(dialogButton == JOptionPane.YES_OPTION) {
-	            	Utility.deleteUser(na.getText());
+	            	Utility.deleteUser(name);
 	            	JOptionPane d = new JOptionPane();
 					d.showMessageDialog(null, "数据已删除！");
 	            if(dialogButton == JOptionPane.NO_OPTION) {
@@ -284,7 +288,7 @@ public class SchoolNumber extends JFrame{
 				JLabel n = new JLabel("姓名： ");
 				JTextField na = new JTextField("", 10);
 				JButton de = new JButton("搜索");
-				de.addActionListener(deleteListener);
+				de.addActionListener(new DeleteListener(na.getText()));
 				dp.add(n);
 				dp.add(na);
 				dp.add(de);
