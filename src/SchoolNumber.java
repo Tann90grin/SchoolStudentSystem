@@ -21,8 +21,10 @@ public class SchoolNumber extends JFrame{
 	JFrame ch;
 	Container c = getContentPane();
 	Boolean mbt;
-	JTextField ID, sn, na, ci, bi, pr, no, gr, nam;
-	JTextField ge;
+	JTextField ID, na, ci, bi, pr, gr, nam;
+	JComboBox no;
+	JLabel sn;
+	ButtonGroup ge;
 	JLabel title;
 	JPasswordField password;
 	JLabel id, p, t;
@@ -32,18 +34,82 @@ public class SchoolNumber extends JFrame{
 	JMenu m, help;
 	JMenuItem add, search, change, delete;
 	Font font = new Font("Default", Font.PLAIN, 32);
+	Font font1 = new Font("Default", Font.PLAIN, 12);
+	int getgrade = Student.getGrade();
+	String getgender = Student.getGender();
+	JRadioButton rb1, rb2;
+	JComboBox grade;
+	ActionListener rbListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			if(rb1.isSelected()==true) {
+				getgender = "男";
+			}
+			else if(rb2.isSelected()==true) {
+				getgender = "女";
+			}
+			else {
+				JOptionPane d =new JOptionPane();
+				d.showMessageDialog(null, "请选择性别！");
+			}
+		}
+	};
+	ItemListener itemListener = new ItemListener() {
+		public void itemStateChanged(ItemEvent arg0) {
+			if(ItemEvent.SELECTED == arg0.getStateChange()) {
+				getgrade = Integer.parseInt((String) arg0.getItem());
+			}
+			if(ItemEvent.DESELECTED == arg0.getStateChange()) {
+				getgrade = Integer.parseInt((String) arg0.getItem());
+			}
+		}
+	};
+	public JComboBox CBAddPanel(JPanel panel) {
+		JPanel row = new JPanel();
+		row.add(new JLabel("年级： "));
+		grade = new JComboBox();
+		grade.addItemListener(itemListener);
+		grade.addItem(""+1);
+		grade.addItem(""+2);
+		grade.addItem(""+3);
+		grade.addItem(""+4);
+		grade.addItem(""+5);
+		grade.addItem(""+6);
+		grade.addItem(""+7);
+		grade.addItem(""+8);
+		grade.addItem(""+9);
+		grade.addItem(""+10);
+		grade.addItem(""+11);
+		grade.addItem(""+12);
+		row.add(grade);
+		panel.add(row);
+		return grade;
+	}
+	public ButtonGroup RBAddPanel(JPanel panel) {
+		JPanel row = new JPanel();
+		ButtonGroup group = new ButtonGroup();
+		row.add(new JLabel("性别： "));
+		rb1 = new JRadioButton("男");
+		rb2 = new JRadioButton("女");
+		group.add(rb1);
+		group.add(rb2);
+		panel.add(row);
+		panel.add(rb1);
+		panel.add(rb2);
+		rb1.addActionListener(rbListener);
+		rb2.addActionListener(rbListener);
+		return group;
+	}
 	private class AddListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			int dialogButton = JOptionPane.YES_NO_OPTION;
             JOptionPane.showConfirmDialog (null, "你要添加此用户吗？","警告", dialogButton);
             if(dialogButton == JOptionPane.YES_OPTION) {
-				Student.setID(Integer.parseInt(sn.getText()));
         		Student.setName(nam.getText());
         		Student.setBirthday(bi.getText());
-        		Student.setGender(ci.getText());
+        		Student.setGender(getgender);
         		Student.setCity(ci.getText());
         		Student.setProfession(pr.getText());
-        		Student.setGrade(Integer.parseInt(no.getText()));
+        		Student.setGrade(getgrade);
         		Student.setNote(gr.getText());
         		if(Utility.detectUser(Student.getName())==false) {
 					Utility.AddUser();
@@ -59,19 +125,22 @@ public class SchoolNumber extends JFrame{
 		}
 	};
 	private class ChangeListener implements ActionListener {
+		private String name;
+		public ChangeListener(String name) {
+			this.name = name;
+		}
 		public void actionPerformed(ActionEvent e) {
 			int dialogButton = JOptionPane.YES_NO_OPTION;
-            JOptionPane.showConfirmDialog (null, "你要修改"+a+"吗？","警告", dialogButton);
+            JOptionPane.showConfirmDialog (null, "你要修改"+name+"吗？","警告", dialogButton);
             if(dialogButton == JOptionPane.YES_OPTION) {
-            	Student.setID(Integer.parseInt(sn.getText()));
         		Student.setName(nam.getText());
         		Student.setBirthday(bi.getText());
-        		Student.setGender(ge.getText());
+        		Student.setGender(getgender);
         		Student.setCity(ci.getText());
         		Student.setProfession(pr.getText());
-        		Student.setGrade(Integer.parseInt(no.getText()));
+        		Student.setGrade(getgrade);
         		Student.setNote(gr.getText());
-        		Utility.UpdateUser(a);
+        		Utility.UpdateUser(name);
             if(dialogButton == JOptionPane.NO_OPTION) {
             	remove(dialogButton);
                 }
@@ -98,12 +167,16 @@ public class SchoolNumber extends JFrame{
 		}
 	};
 	private class SearchListener implements ActionListener {
+		private JTextField name;
+		public SearchListener(JTextField name) {
+			this.name = name;
+		}
 		public void actionPerformed(ActionEvent e) {
-			if(Utility.searchUser(na.getText())==true) {
+			if(Utility.searchUser(name.getText())==true) {
 				int dialogButton = JOptionPane.YES_NO_OPTION;
-	            JOptionPane.showConfirmDialog (null, "你要搜索"+na.getText()+"吗？","警告", dialogButton);
+	            JOptionPane.showConfirmDialog (null, "你要搜索"+name.getText()+"吗？","警告", dialogButton);
 	            if(dialogButton == JOptionPane.YES_OPTION) {
-	            	CreateChangePanel(na.getText());
+	            	CreateChangePanel(name.getText());
 	            if(dialogButton == JOptionPane.NO_OPTION) {
 	            	remove(dialogButton);
 	                }
@@ -155,22 +228,7 @@ public class SchoolNumber extends JFrame{
 			}
 		}
 	};
-public JComboBox CBAddPanel(JPanel panel, String label) {
-		JPanel row =new JPanel();
-		row.add(new JLabel(label));
-		JComboBox input = new JComboBox<String>();
-		input.addItem("男");
-		input.addItem("女");
-		input.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
-		row.add(input);
-		panel.add(row);
-		return input;
-	}
-public JLabel LBAddPanel(JPanel panel, String title, Font font) {
+	public JLabel LBAddPanel(JPanel panel, String title, Font font) {
 		JPanel row = new JPanel();
 		JLabel label = new JLabel(title);
 		label.setFont(font);
@@ -179,7 +237,7 @@ public JLabel LBAddPanel(JPanel panel, String title, Font font) {
 		return label;
 	}
 	//生成每个JPanel中的JTextField//
-public void CreateMainPanel() {
+	public void CreateMainPanel() {
 	JPanel mainPanel = new JPanel();
 	c.removeAll();
 	c.add(mainPanel);
@@ -193,7 +251,9 @@ public void CreateMainPanel() {
 				JLabel n = new JLabel("姓名： ");
 				JTextField na = new JTextField("", 10);
 				JButton se = new JButton("搜索");
-				se.addActionListener(new SearchListener());
+				se.addActionListener(new SearchListener(na));
+			}
+		});
 		JButton addbtn = new JButton("添加数据");
 		addbtn.addActionListener(new AddPanelListener());
 		JButton searchbtn = new JButton("搜索数据");
@@ -206,7 +266,7 @@ public void CreateMainPanel() {
 				JLabel n = new JLabel("姓名： ");
 				JTextField na = new JTextField("", 10);
 				JButton se = new JButton("搜索");
-				se.addActionListener(new SearchListener());
+				se.addActionListener(new SearchListener(na));
 				sp.add(n);
 				sp.add(na);
 				sp.add(se);
@@ -239,110 +299,109 @@ public void CreateMainPanel() {
 		f.revalidate();
 		f.repaint();
 	}
-}
 	public void CreateChangePanel(String a) {
-		Utility.GetUser(a);
-		JPanel change = new JPanel();
-		change.setVisible(true);
-		c.removeAll();
-		JButton changebtn = new JButton("修改数据");
-		changebtn.addActionListener(new ChangeListener());
-		JButton back = new JButton("返回");
-		back.addActionListener(new BackListener());
-		sn = STAddPanel(change, "学号： ", ""+Student.getID());
-		nam = STAddPanel(change, "姓名： ",Student.getName());
-		ge = STAddPanel(change, "性别：  ",Student.getGender());
-		ci = STAddPanel(change, "城市： ",Student.getCity());
-		bi = STAddPanel(change, "出生日期：",""+Student.getBirthday());
-		pr = STAddPanel(change, "专业:", Student.getProfession());
-		no = STAddPanel(change, "年级： ", ""+Student.getGrade());
-		gr = STAddPanel(change, "备注： ", Student.getNote() );
-		change.add(changebtn);
-		change.add(back);
-		c.add(change);
-		change.setLayout(new GridLayout(9,1,2,2));
-		f.revalidate();
-		f.repaint();
-	}
+	Utility.GetUser(a);
+	JPanel change = new JPanel();
+	change.setVisible(true);
+	c.removeAll();
+	JButton changebtn = new JButton("修改数据");
+	changebtn.addActionListener(new ChangeListener(a));
+	JButton back = new JButton("返回");
+	back.addActionListener(new BackListener());
+	sn = LBAddPanel(change, "学号： "+Student.getID(), font1);
+	nam = STAddPanel(change, "姓名： ",Student.getName());
+	ge = RBAddPanel(change);
+	ci = STAddPanel(change, "城市： ",Student.getCity());
+	bi = STAddPanel(change, "出生日期：",""+Student.getBirthday());
+	pr = STAddPanel(change, "专业:", Student.getProfession());
+	no = CBAddPanel(change);
+	gr = STAddPanel(change, "备注： ", Student.getNote() );
+	change.add(changebtn);
+	change.add(back);
+	c.add(change);
+	change.setLayout(new GridLayout(10,1,2,2));
+	f.revalidate();
+	f.repaint();
+}
 	//生成修改数据的面板//
 	public void CreateAddPanel() {
-		JPanel change = new JPanel();
-		change.setVisible(true);
-		c.removeAll();
-		JButton addbtn = new JButton("添加数据");
-		addbtn.addActionListener(new AddListener());
-		JButton back = new JButton("返回");
-		back.addActionListener(new BackListener());
-		sn = STAddPanel(change, "学号： ", "");
-		nam = STAddPanel(change, "姓名： ", "");
-		ge = STAddPanel(change, "性别：  ", "");
-		ci = STAddPanel(change, "城市：  ","");
-		bi = STAddPanel(change, "出生日期：","");
-		pr = STAddPanel(change, "专业:", "");
-		no = STAddPanel(change, "年级： ", "");
-		gr = STAddPanel(change, "备注： ", "");
-		change.add(addbtn);
-		change.add(back);
-		c.add(change);
-		change.setLayout(new GridLayout(9,1,2,2));
-		f.revalidate();
-		f.repaint();
-		}
+	JPanel change = new JPanel();
+	change.setVisible(true);
+	c.removeAll();
+	JButton addbtn = new JButton("添加数据");
+	addbtn.addActionListener(new AddListener());
+	JButton back = new JButton("返回");
+	back.addActionListener(new BackListener());
+	sn = LBAddPanel(change, "学号： "+Student.getID(), font1);
+	nam = STAddPanel(change, "姓名： ", "");
+	ge = RBAddPanel(change);
+	ci = STAddPanel(change, "城市：  ","");
+	bi = STAddPanel(change, "出生日期：","");
+	pr = STAddPanel(change, "专业:", "");
+	no = CBAddPanel(change);
+	gr = STAddPanel(change, "备注： ", "");
+	change.add(addbtn);
+	change.add(back);
+	c.add(change);
+	change.setLayout(new GridLayout(10,1,2,2));
+	f.revalidate();
+	f.repaint();
+}
 	//面板代码//
 	public SchoolNumber() {
-		f.setSize(960, 720);
-		f.setVisible(true);
-		c.setVisible(true);
-		Boolean mbt = false;
-		JPanel menuPanel = new JPanel();
-		menuPanel.setLayout(new GridLayout(0, 2));
-		String t = "学生学籍管理系统";
-		JButton mcheckbtn = new JButton("检查系统");
-		mcheckbtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(Utility.userExist(ID.getText(), password.getText())==true) {
-					CreateMainPanel();
-				}
-				else{
-					JOptionPane d = new JOptionPane();
-					d.showMessageDialog(null, "请输入正确的用户名和密码！");
-				}
+	f.setSize(960, 720);
+	f.setVisible(true);
+	c.setVisible(true);
+	Boolean mbt = false;
+	JPanel menuPanel = new JPanel();
+	menuPanel.setLayout(new GridLayout(0, 2));
+	String t = "学生学籍管理系统";
+	JButton mcheckbtn = new JButton("检查系统");
+	mcheckbtn.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			if(Utility.userExist(ID.getText(), password.getText())==true) {
+				CreateMainPanel();
 			}
-		});
-		JMenuBar mb = new JMenuBar();
-		JMenuItem add = new JMenuItem("添加数据");
-		JMenuItem search = new JMenuItem("搜索数据");
-		JMenuItem delete = new JMenuItem("删除数据");
-		JMenuItem change = new JMenuItem("修改数据");
-		JMenuItem exit = new JMenuItem("退出");
-		f.setJMenuBar(mb);
-		JMenu m = new JMenu("文件");
-		JMenu help = new JMenu("帮助");
-		m.setVisible(true);
-		m.add(search);
-		m.add(add);
-		m.add(change);
-		m.add(delete);
-		m.add(exit);
-		exit.addActionListener(new ExitListener());
-		search.setEnabled(mbt);
-		add.setEnabled(mbt);
-		change.setEnabled(mbt);
-		delete.setEnabled(mbt);
-		mb.add(m);
-		mb.add(help);
-		title = LBAddPanel(menuPanel, t, font);
-		ID = STAddPanel(menuPanel, "用户名： ", "");
-		password = PSAddPanel(menuPanel, "密码： ", "");
-		menuPanel.add(mcheckbtn);
-		menuPanel.setVisible(true);
-		menuPanel.setLayout(new GridLayout(5, 2, 1, 1));
-		c.add(menuPanel);
-		f.add(c);
-		f.revalidate();
-		f.repaint();
-	}
+			else{
+				JOptionPane d = new JOptionPane();
+				d.showMessageDialog(null, "请输入正确的用户名和密码！");
+			}
+		}
+	});
+	JMenuBar mb = new JMenuBar();
+	JMenuItem add = new JMenuItem("添加数据");
+	JMenuItem search = new JMenuItem("搜索数据");
+	JMenuItem delete = new JMenuItem("删除数据");
+	JMenuItem change = new JMenuItem("修改数据");
+	JMenuItem exit = new JMenuItem("退出");
+	f.setJMenuBar(mb);
+	JMenu m = new JMenu("文件");
+	JMenu help = new JMenu("帮助");
+	m.setVisible(true);
+	m.add(search);
+	m.add(add);
+	m.add(change);
+	m.add(delete);
+	m.add(exit);
+	exit.addActionListener(new ExitListener());
+	search.setEnabled(mbt);
+	add.setEnabled(mbt);
+	change.setEnabled(mbt);
+	delete.setEnabled(mbt);
+	mb.add(m);
+	mb.add(help);
+	title = LBAddPanel(menuPanel, t, font);
+	ID = STAddPanel(menuPanel, "用户名： ", "");
+	password = PSAddPanel(menuPanel, "密码： ", "");
+	menuPanel.add(mcheckbtn);
+	menuPanel.setVisible(true);
+	menuPanel.setLayout(new GridLayout(5, 2, 1, 1));
+	c.add(menuPanel);
+	f.add(c);
+	f.revalidate();
+	f.repaint();
+}
 	public static void main(String[] args) {
-		new SchoolNumber();
-	}
+	new SchoolNumber();
+}
 }
