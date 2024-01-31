@@ -19,7 +19,7 @@ public class Utility {
     else{
     	try {
     	Class.forName("com.mysql.cj.jdbc.Driver");
-   	 	con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/user", "root", "henry7086");
+   	 	con = DriverManager.getConnection(" ", " ", " ");
     	}catch(Exception e) {
     		e.printStackTrace();
     	}
